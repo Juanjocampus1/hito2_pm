@@ -19,19 +19,11 @@ public class PlayerController : MonoBehaviour
     public PrefabPool prefabPool; // Referencia a la pool de prefabs
     public float shootForce = 10f; // Fuerza inicial del disparo
 
-    [Header("Health Settings")]
-    public int maxHealth = 4;
-    private int currentHealth;
-    private float regenCooldown = 4f;
-    private float regenTimer = 1f;
-    private bool isRegenerating = false;
-
     void Start()
     {
         // Bloquear el cursor en el centro de la pantalla
         Cursor.lockState = CursorLockMode.Locked;
         characterController = GetComponent<CharacterController>();
-        currentHealth = maxHealth;
     }
 
     void Update()
@@ -72,22 +64,6 @@ public class PlayerController : MonoBehaviour
         {
             LaunchSphere();
         }
-
-        // Regenerar vida
-        if (isRegenerating)
-        {
-            regenTimer += Time.deltaTime;
-            if (regenTimer >= 1f)
-            {
-                currentHealth = Mathf.Min(currentHealth + 1, maxHealth);
-                Debug.Log("Vida del jugador: " + currentHealth);
-                regenTimer = 0f;
-                if (currentHealth == maxHealth)
-                {
-                    isRegenerating = false;
-                }
-            }
-        }
     }
 
     void LaunchSphere()
@@ -120,32 +96,14 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage()
     {
-        currentHealth--;
-        Debug.Log("Vida del jugador: " + currentHealth);
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-        else
-        {
-            isRegenerating = false;
-            regenTimer = 0f;
-            Debug.Log("Tiempo para comenzar la regeneración: " + regenCooldown + " segundos");
-            Invoke("StartRegeneration", regenCooldown);
-        }
+        Die();
     }
 
-    void StartRegeneration()
+    public void Die()
     {
-        isRegenerating = true;
-        Debug.Log("Comenzando regeneración de vida");
-    }
-
-    void Die()
-    {
-        // Aquí puedes implementar la lógica para finalizar el juego
+        // Mostrar la UI de muerte
+        FindObjectOfType<DeathUI>().ShowDeathUI();
         Debug.Log("Jugador ha muerto");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reiniciar la escena
     }
 }
 

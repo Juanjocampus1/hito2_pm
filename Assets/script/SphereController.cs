@@ -14,8 +14,8 @@ public class SphereController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Player"))
         {
-            // Hacer daño al jugador
-            collision.gameObject.GetComponent<PlayerController>().TakeDamage();
+            // Hacer que el jugador muera instantáneamente
+            collision.gameObject.GetComponent<PlayerController>().Die();
         }
 
         bounceCount++;
@@ -32,4 +32,3 @@ public class SphereController : MonoBehaviour
         // Aquí puedes llamar a un método en PrefabPool para devolver el objeto a la pool si es necesario
     }
 }
-
